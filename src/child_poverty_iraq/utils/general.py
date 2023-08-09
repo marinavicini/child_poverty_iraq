@@ -1,6 +1,6 @@
 import requests
 
-# import wget
+import wget
 from pathlib import Path
 import pickle
 from tqdm.auto import tqdm
