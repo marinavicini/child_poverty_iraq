@@ -3,6 +3,7 @@ import os
 import requests
 import pickle
 import geopandas as gpd
+from tqdm import tqdm
 
 import child_poverty_iraq.utils.constants as c
 
@@ -31,6 +32,31 @@ def get_poverty_adm0():
     # reset index
     pov_adm0.reset_index(inplace=True, drop=True)
     return pov_adm0
+
+
+def get_file_names(directory_path):
+    # Get a list of all files in the directory
+    file_list = [
+        os.path.splitext(f)[0]
+        for f in os.listdir(directory_path)
+        if os.path.isfile(os.path.join(directory_path, f))
+    ]
+    file_list = list(set(file_list))
+    return file_list
+
+
+def get_poverty_geom_adm1():
+    directory_path = "../data/external/ADM1_geojson"
+    file_list = get_file_names(directory_path)
+
+    geom_pov_adm1 = gpd.GeoDataFrame()
+
+    for cc in tqdm(file_list):
+        filepath = f"{directory_path}/{cc}.geojson"
+        tmp = gpd.read_file(filepath)
+        geom_pov_adm1 = pd.concat([geom_pov_adm1, tmp])
+
+    return geom_pov_adm1
 
 
 def get_mosaiks(filename):
@@ -77,11 +103,11 @@ def get_geom_cgaz(url, filepath):
     return gdf
 
 
-def get_geom_adm0():
+def get_mosaiks_geom_adm0():
     return get_geom_cgaz(c.url_tjson_adm0, c.filepath_tjson_adm0)
 
 
-def get_geom_adm1():
+def get_mosaiks_geom_adm1():
     return get_geom_cgaz(c.url_tjson_adm1, c.filepath_tjson_adm1)
 
 
