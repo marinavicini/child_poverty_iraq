@@ -66,21 +66,27 @@ def get_mosaiks(filename):
     with open(filepath, "rb") as file:
         mosaiks = pickle.load(file)
 
-    mosaiks.reset_index(inplace=True)
-
     return mosaiks
 
 
 def get_mosaiks_adm0():
-    return get_mosaiks(
+    mosaiks = get_mosaiks(
         "ADM_2_regions_RCF_global_dense_aggregated_to_ADM0_pop_weight=True"
     )
+    mosaiks.reset_index(inplace=True)
+    return mosaiks
 
 
 def get_mosaiks_adm1():
-    return get_mosaiks(
+    mosaiks = get_mosaiks(
         "ADM_2_regions_RCF_global_dense_aggregated_to_ADM1_pop_weight=True"
     )
+    mosaiks.reset_index(inplace=True)
+    return mosaiks
+
+
+def get_mosaiks_adm2():
+    return get_mosaiks("ADM_2_regions_RCF_global_dense_pop_weight=True")
 
 
 def get_geom_cgaz(url, filepath):
@@ -100,6 +106,9 @@ def get_geom_cgaz(url, filepath):
     # Use geopandas to read the TopoJSON file
     gdf = gpd.read_file(filepath)
 
+    # Set the CRS
+    gdf.crs = "EPSG:4326"
+
     return gdf
 
 
@@ -111,5 +120,5 @@ def get_mosaiks_geom_adm1():
     return get_geom_cgaz(c.url_tjson_adm1, c.filepath_tjson_adm1)
 
 
-# def get_geom_adm2():
-#     return get_geom_cgaz(c.url_tjson_adm2, c.filepath_tjson_adm2)
+def get_mosaiks_geom_adm2():
+    return get_geom_cgaz(c.url_tjson_adm2, c.filepath_tjson_adm2)
