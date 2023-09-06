@@ -5,3 +5,8 @@ url_tjson_adm2 = "https://www.geoboundaries.org/data/geoBoundariesCGAZ-3_0_0/ADM
 filepath_tjson_adm0 = "../data/external/geoBoundariesCGAZ_ADM0.topojson"
 filepath_tjson_adm1 = "../data/external/geoBoundariesCGAZ_ADM1.topojson"
 filepath_tjson_adm2 = "../data/external/geoBoundariesCGAZ_ADM2.topojson"
+
+# mosaiks features
+mosaiks_features = []
+for i in range(4000):
+    mosaiks_features.append(f"X_{i}")
