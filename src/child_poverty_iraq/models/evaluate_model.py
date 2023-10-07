@@ -26,13 +26,13 @@ def hist_errors(y_train_pred, y_train, y_test, y_test_pred):
     errors_test = y_test - y_test_pred
 
     fig, ax = plt.subplots(figsize=(8, 5))  # , dpi=200)
-    sns.histplot(errors_train, kde=True, ax=ax)
+    sns.histplot(errors_train, kde=True, ax=ax, color="#FF817E")
     plt.xlabel("Target Error")
     plt.title("Histogram of Error (true - predicted)")
     plt.show()
 
     fig, ax = plt.subplots(figsize=(8, 5))  # , dpi=200)
-    sns.histplot(errors_test, kde=True, ax=ax)
+    sns.histplot(errors_test, kde=True, color="#FF817E")
     plt.xlabel("Target Error")
     plt.title("Histogram of Error (true - predicted)")
     plt.show()

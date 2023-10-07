@@ -80,7 +80,7 @@ def transform_pca(X, pca, scaler):
 
 def split_train_test(data, target, test_size=0.2):
     merged_train, merged_test = train_test_split(
-        data, test_size=test_size, random_state=60
+        data, test_size=test_size, random_state=42
     )
 
     return merged_train, merged_test
@@ -103,7 +103,7 @@ def define_model_cv(X_train, y_train, model=Ridge(alpha=0.1), sample_weights=Non
     # model = Ridge(alpha=0.1)
 
     # Fit the model using K-fold cross-validation on the training data
-    kf = KFold(n_splits=5, shuffle=True, random_state=60)
+    kf = KFold(n_splits=5, shuffle=True, random_state=42)
 
     scores = cross_val_score(
         model,
