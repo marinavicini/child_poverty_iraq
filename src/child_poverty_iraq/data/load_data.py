@@ -318,3 +318,12 @@ def adm2_for_country(cc="IRQ"):
     plt.show()
 
     return mosaiks_adm2
+
+
+def make_adm1_dataset():
+    # ADM1
+    mosaiks_adm1 = get_mosaiks_adm1()
+    pov_adm1 = get_poverty_adm1()
+    merged = merge_mosaiks_pov_adm1(pov_adm1, mosaiks_adm1, threshold=0.51)
+    merged.drop(columns=["geom_pov", "geom_mos", "geom_inter"], inplace=True)
+    return merged
