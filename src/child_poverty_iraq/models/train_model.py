@@ -200,6 +200,7 @@ def train_model(
     else:
         # Scale the features
         scaler = get_standard_scaler(X_train)
+        pca = None
         X_train = scaler.transform(X_train)
         X_test = scaler.transform(X_test)
 
@@ -221,7 +222,7 @@ def train_model(
     merged["target_error"] = merged[target] - merged["predictions"]
 
     # Save as a geodataframe
-    merged["geometry"] = merged["geometry"].apply(lambda x: wkt.loads(x))
+    merged["geometry"] = merged["geometry"].apply(lambda x: wkt.loads(str(x)))
     merged = gpd.GeoDataFrame(merged, geometry="geometry")
 
     model_details = {

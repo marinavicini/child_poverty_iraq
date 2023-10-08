@@ -4,7 +4,7 @@ import child_poverty_iraq.data.load_data as ld
 
 
 def scatter_plot(y_train_pred, y_train, y_test, y_test_pred):
-    fig, ax = plt.subplots(figsize=(6, 5))  # , dpi=200)
+    fig, ax = plt.subplots(figsize=(6, 5), dpi=200)
     ax.scatter(y_train, y_train_pred)
     plt.title("Train")
     plt.xlabel("True")
@@ -12,7 +12,7 @@ def scatter_plot(y_train_pred, y_train, y_test, y_test_pred):
     ax.set_aspect("equal")
     plt.show()
 
-    fig, ax = plt.subplots(figsize=(6, 5))  # , dpi=200)
+    fig, ax = plt.subplots(figsize=(6, 5), dpi=200)
     ax.scatter(y_test, y_test_pred)
     plt.xlabel("True")
     plt.ylabel("Predicted")
@@ -25,16 +25,16 @@ def hist_errors(y_train_pred, y_train, y_test, y_test_pred):
     errors_train = y_train - y_train_pred
     errors_test = y_test - y_test_pred
 
-    fig, ax = plt.subplots(figsize=(8, 5))  # , dpi=200)
-    sns.histplot(errors_train, kde=True, ax=ax)
+    fig, ax = plt.subplots(figsize=(8, 5), dpi=200)
+    sns.histplot(errors_train, kde=True, ax=ax, color="#FF4F4B")
     plt.xlabel("Target Error")
-    plt.title("Histogram of Error (true - predicted)")
+    plt.title("Training Error (true - predicted)")
     plt.show()
 
-    fig, ax = plt.subplots(figsize=(8, 5))  # , dpi=200)
-    sns.histplot(errors_test, kde=True, ax=ax)
+    fig, ax = plt.subplots(figsize=(8, 5), dpi=200)
+    sns.histplot(errors_test, kde=True, color="#FF4F4B")
     plt.xlabel("Target Error")
-    plt.title("Histogram of Error (true - predicted)")
+    plt.title("Test Error (true - predicted)")
     plt.show()
 
 
@@ -43,14 +43,14 @@ def get_scale_legend(data, col_to_plot="target_error"):
     return max_scale
 
 
-def map_errors(data, col_to_plot="target_error"):
+def map_errors(data, col_to_plot="target_error", target_name="Prevalence"):
     max_scale = get_scale_legend(data, col_to_plot="target_error")
 
     # Get country shapes
     geom_adm0 = ld.get_mosaiks_geom_adm0()
 
     # Create a plot using matplotlib
-    fig, ax = plt.subplots(figsize=(13, 5))  # , dpi=200)
+    fig, ax = plt.subplots(figsize=(13, 5), dpi=200)
 
     # Plot world countries
     geom_adm0[geom_adm0["shapeName"] != "Antarctica"].plot(ax=ax, color="#b0afae")
@@ -65,17 +65,22 @@ def map_errors(data, col_to_plot="target_error"):
         vmax=max_scale,
     )
 
-    plt.title(f"Errors of Moderate Prevalence")
+    plt.title(f"Errors of Moderate {target_name}")
     plt.axis("off")
     plt.show()
 
 
-def map_irq_error(data, col_to_plot="target_error", error_scale=None):
+def map_irq_error(
+    data,
+    col_to_plot="target_error",
+    error_scale=None,
+    target_name="Prevalence",
+):
     if error_scale is None:
         error_scale = get_scale_legend(data, col_to_plot="target_error")
 
     # Create a plot using matplotlib
-    fig, ax = plt.subplots(figsize=(12, 5))  # , dpi=200)
+    fig, ax = plt.subplots(figsize=(12, 5), dpi=200)
 
     # Plot countries with ADM1 error poverty estimates
     data[data["countrycode"] == "IRQ"].plot(
@@ -87,19 +92,19 @@ def map_irq_error(data, col_to_plot="target_error", error_scale=None):
         vmax=error_scale,
     )
 
-    plt.title("Iraq ADM1 Errors of Moderate Prevalence")
+    plt.title(f"Errors of ADM1 Moderate {target_name}")
     plt.axis("off")
     plt.show()
 
 
-def compare_irq_pred(data, target, cmap="YlOrRd"):
+def compare_irq_pred(data, target, cmap="YlOrRd", target_name="Prevalence"):
     # Predicted
-    fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+    fig, ax = plt.subplots(1, 2, figsize=(12, 5), dpi=200)
 
     # Select bounds for plots
     if target == "sumpoor_mod":
         vmin = 0
-        vmax = 4
+        vmax = 3.5
     else:
         vmin = 0
         vmax = 100
@@ -107,13 +112,13 @@ def compare_irq_pred(data, target, cmap="YlOrRd"):
     data[data["countrycode"] == "IRQ"].plot(
         ax=ax[0], column=target, cmap=cmap, legend=True, vmin=vmin, vmax=vmax
     )
-    ax[0].set_title("TRUE Iraq ADM1 Prevalence")
+    ax[0].set_title(f"TRUE Iraq ADM1 Moderate {target_name}")
     ax[0].axis("off")
 
     data[data["countrycode"] == "IRQ"].plot(
         ax=ax[1], column="predictions", cmap=cmap, legend=True, vmin=vmin, vmax=vmax
     )
-    ax[1].set_title("PRED Iraq ADM1 Prevalence")
+    ax[1].set_title(f"PRED Iraq ADM1 {target_name}")
     ax[1].axis("off")
     plt.show()
 
@@ -127,6 +132,6 @@ def map_irq_training(data):
         ax=ax, column="is_training", cmap="PiYG", legend=True
     )
 
-    plt.title("Iraq ADM1 Errors of Moderate Prevalence")
+    plt.title("Training / Test ADM1")
     plt.axis("off")
     plt.show()

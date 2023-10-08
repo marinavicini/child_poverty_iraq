@@ -11,8 +11,13 @@ import gc
 import child_poverty_iraq.utils.constants as c
 
 
-def get_poverty_feat_adm1():
-    filename_pov = "../data/raw/poverty_adm1.csv"
+def get_poverty_feat_adm1(all_dims=False):
+    """There are two dataframe with adm1 estimates, the first contains
+    all the dimensions but it has less countries"""
+    if all_dims:
+        filename_pov = "../data/raw/subnational2023_subdomains_poverty.csv"
+    else:
+        filename_pov = "../data/raw/poverty_adm1.csv"
     pov_adm1 = pd.read_csv(filename_pov)
     return pov_adm1
 
@@ -164,11 +169,11 @@ def get_mosaiks_geom_adm2():
     return get_geom_cgaz(c.url_tjson_adm2, c.filepath_tjson_adm2)
 
 
-def get_poverty_adm1():
+def get_poverty_adm1(all_dims=False):
     """
     Get poverty features with geometry"""
     # Poverty
-    pov_adm1 = get_poverty_feat_adm1()
+    pov_adm1 = get_poverty_feat_adm1(all_dims)
     print(f"Poverty shape: {pov_adm1.shape}")
 
     # Geometry
@@ -237,12 +242,12 @@ def merge_mosaiks_pov_adm1(pov_adm1, mosaiks_adm1, threshold=0.51):
     return merged
 
 
-def make_dataset_ADM1():
+def make_dataset_ADM1(all_dims=False):
     # Get mosaiks features
     mosaiks_adm1 = get_mosaiks_adm1()
 
     # Get poverty data
-    pov_adm1 = get_poverty_adm1()
+    pov_adm1 = get_poverty_adm1(all_dims)
 
     # Merge them
     merged = merge_mosaiks_pov_adm1(pov_adm1, mosaiks_adm1, threshold=0.51)
@@ -318,12 +323,3 @@ def adm2_for_country(cc="IRQ"):
     plt.show()
 
     return mosaiks_adm2
-
-
-def make_adm1_dataset():
-    # ADM1
-    mosaiks_adm1 = get_mosaiks_adm1()
-    pov_adm1 = get_poverty_adm1()
-    merged = merge_mosaiks_pov_adm1(pov_adm1, mosaiks_adm1, threshold=0.51)
-    merged.drop(columns=["geom_pov", "geom_mos", "geom_inter"], inplace=True)
-    return merged
